@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { storespingCart, Search, Menu, X, User } from "lucide-react";
+import { ShoppingCart, Search, Menu, X, User } from "lucide-react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -19,7 +19,7 @@ const Navbar = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-10">
           <Link to="/" className="hover:text-indigo-400 transition">Home</Link>
-          <Link to="/stores" className="hover:text-indigo-400 transition">stores</Link>
+          <Link to="/stores" className="hover:text-indigo-400 transition">Stores</Link>
           <Link to="/blog" className="hover:text-indigo-400 transition">Blogs</Link>
         </div>
 
@@ -32,7 +32,7 @@ const Navbar = () => {
         <div className="flex items-center gap-6">
           {/* Cart */}
           <Link to="/cart" className="relative hover:text-indigo-400 transition">
-            <storespingCart size={24} />
+            <ShoppingCart size={24} />
             {user?.cart?.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 {user.cart.length}
@@ -48,10 +48,12 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="hidden md:flex items-center gap-3">
-              <User size={20} className="text-gray-400" />
-              <Link to="/profile"
-                className="text-gray-300 font-medium hover:underline cursor-pointer">Hi, {user.name}
+              <Link to="/profile">
+                <User size={20} className="cursor-pointer hover:text-indigo-400" />
               </Link>
+              <span
+                className="text-gray-300 font-medium">Hi, {user.name}
+              </span>
               <button
                 onClick={handleLogout}
                 className="bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
@@ -86,7 +88,7 @@ const Navbar = () => {
             <>
               <Link to="/profile" className="hover:text-indigo-400">Go To Profile</Link>
               <Link to="/stores"
-              className="hover:text-indigo-400">stores Near Me</Link>
+              className="hover:text-indigo-400">Stores Near Me</Link>
               <button
                 onClick={handleLogout}
                 className="bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700 transition"

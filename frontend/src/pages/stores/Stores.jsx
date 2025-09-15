@@ -1,6 +1,6 @@
 import React from 'react'
 
-const stores = () => {
+const Stores = () => {
   return (
     <div>
       stores Near Me
@@ -8,4 +8,4 @@ const stores = () => {
   )
 }
 
-export default stores
+export default Stores
