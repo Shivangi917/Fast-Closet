@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema({
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   brand: String,
   images: [String],
+  store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store' },
   ratings: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

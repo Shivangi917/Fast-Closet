@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Shop = () => {
+const stores = () => {
   return (
     <div>
-      Shops Near Me
+      stores Near Me
     </div>
   )
 }
 
-export default Shop
+export default stores

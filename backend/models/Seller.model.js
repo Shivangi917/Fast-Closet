@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const sellerSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
 
-  shopName: { type: String, required: true },
-  shopDescription: { type: String },
+  storesName: { type: String, required: true },
+  storesDescription: { type: String },
 
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
   

@@ -5,7 +5,7 @@ import Login from "./pages/login/Login";
 import Signup from "./pages/signup/Signup";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
-import Shop from "./pages/shop/Shop";
+import stores from "./pages/stores/stores";
 import Navbar from "./components/navbar/Navbar";
 
 function PrivateRoute({ children }) {
@@ -45,10 +45,10 @@ function App() {
           />
 
           <Route
-            path="/shop"
+            path="/stores"
             element={
               <PrivateRoute>
-                <Shop />
+                <stores />
               </PrivateRoute>
             }
           />
