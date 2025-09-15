@@ -4,7 +4,7 @@ import Stores from "../../components/stores/Stores";
 import Products from "../../components/products/Products";
 import Hero from "../../components/hero/Hero";
 import { getNearbyStores } from "../../utils/api/store.api";
-import { getTrendingProducts } from "../../utils/api/product.api";
+import { getProducts, getTrendingProducts } from "../../utils/api/product.api";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -33,12 +33,18 @@ const Home = () => {
   }, [location]);
 
   // Fetch trending products
+  // useEffect(() => {
+  //   if (location.lat && location.lng) {
+  //     getTrendingProducts(location.lat, location.lng)
+  //     .then(setProducts)
+  //     .catch(console.error);
+  //   }
+  // }, [location]);
+
   useEffect(() => {
-    if (location.lat && location.lng) {
-      getTrendingProducts(location.lat, location.lng)
-      .then(setProducts)
+    getProducts()
+      .then((data) => setProducts(data))
       .catch(console.error);
-    }
   }, [location]);
 
   return (

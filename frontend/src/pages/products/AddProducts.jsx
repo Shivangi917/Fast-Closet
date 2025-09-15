@@ -57,10 +57,6 @@ const AddProduct = () => {
     e.preventDefault();
 
     if (!name || !price || !category || images.length === 0) {
-    console.log(name);
-    console.log(price);
-    console.log(category);
-    console.log(images.length);
       setMessage("Please fill all required fields and upload at least 1 image.");
       return;
     }
