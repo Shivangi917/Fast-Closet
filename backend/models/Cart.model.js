@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+
+const cartItemSchema = new mongoose.Schema({
+  product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  quantity: { type: Number, default: 1 }
+}, { _id: false });
 
 const cartSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  items: [
-    {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-      quantity: { type: Number, default: 1 },
-    }
-  ],
+  customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  items: [cartItemSchema],
   totalPrice: { type: Number, default: 0 },
 }, { timestamps: true });
 
-export default mongoose.model("Cart", cartSchema);
+export default mongoose.model('Cart', cartSchema);

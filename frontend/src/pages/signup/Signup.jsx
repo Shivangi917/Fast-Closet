@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signupUser } from '../../Utils/api/api';
+import { signupUser } from '../../utils/api/auth.api';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Signup = () => {

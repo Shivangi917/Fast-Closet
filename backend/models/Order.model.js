@@ -1,28 +1,35 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+
+const orderItemSchema = new mongoose.Schema({
+  product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true }
+}, { _id: false });
 
 const orderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  items: [
-    {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-      quantity: Number,
-      price: Number,
-    }
-  ],
+  customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true },
+
+  items: [orderItemSchema],
   totalAmount: { type: Number, required: true },
-  paymentStatus: { type: String, enum: ["pending", "paid"], default: "pending" },
-  orderStatus: { 
-    type: String, 
-    enum: ["placed", "shipped", "delivered", "cancelled"], 
-    default: "placed" 
-  },
+
   shippingAddress: {
     street: String,
     city: String,
     state: String,
-    zip: String,
-    country: String,
+    postalCode: String,
+    country: String
+  },
+
+  paymentMethod: { type: String, enum: ['COD', 'Card', 'UPI', 'Wallet'], default: 'COD' },
+  paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
+
+  orderStatus: { 
+    type: String, 
+    enum: ['placed', 'confirmed', 'shipped', 'delivered', 'cancelled'], 
+    default: 'placed' 
   }
+
 }, { timestamps: true });
 
-export default mongoose.model("Order", orderSchema);
+export default mongoose.model('Order', orderSchema);

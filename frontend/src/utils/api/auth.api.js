@@ -1,15 +1,11 @@
-import axios from 'axios';
-
-axios.defaults.withCredentials = true;
-
-const API_URL = import.meta.env.VITE_API_URL
+import API from "./api";
 
 export const loginUser = async ({ email, password }) => {
-  const response = await axios.post(`${API_URL}/auth/login`, { email, password });
-  return response.data; 
+  const { data } = await API.post("/auth/login", { email, password });
+  return data;
 };
 
 export const signupUser = async ({ name, email, password }) => {
-  const response = await axios.post(`${API_URL}/auth/signup`, { name, email, password });
-  return response.data; 
+  const { data } = await API.post("/auth/signup", { name, email, password });
+  return data;
 };

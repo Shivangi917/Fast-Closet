@@ -4,9 +4,17 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./pages/login/Login";
 import Signup from "./pages/signup/Signup";
 import Home from "./pages/home/Home";
+import Profile from "./pages/profile/Profile";
+import Shop from "./pages/shop/Shop";
+import Navbar from "./components/navbar/Navbar";
 
 function PrivateRoute({ children }) {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="text-white">Loading...</div>;
+  }
+
   return user ? children : <Navigate to="/login" />;
 }
 
@@ -14,6 +22,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <Navbar />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -22,6 +31,24 @@ function App() {
             element={
               <PrivateRoute>
                 <Home />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/shop"
+            element={
+              <PrivateRoute>
+                <Shop />
               </PrivateRoute>
             }
           />

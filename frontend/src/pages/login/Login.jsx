@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { loginUser } from '../../Utils/api/api';
+import { loginUser } from '../../utils/api/auth.api';
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {

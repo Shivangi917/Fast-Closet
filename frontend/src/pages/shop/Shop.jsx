@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Profile = () => {
+const Shop = () => {
   return (
     <div>
-      HELLO
+      Shops Near Me
     </div>
   )
 }
 
-export default Profile
+export default Shop
