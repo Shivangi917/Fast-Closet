@@ -11,3 +11,25 @@ export const getTrendingProducts = async (lat, lng) => {
     throw err;
   }
 };
+
+export const addProduct = async (formData) => {
+  try {
+    const res = await API.post("/products/add", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error adding product:", err);
+    throw err;
+  }
+};
+
+export const getProducts = async () => {
+  try {
+    const res = await API.get("/products/get");
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching products:", err);
+    throw err;
+  }
+};

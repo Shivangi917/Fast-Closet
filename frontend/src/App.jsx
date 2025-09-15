@@ -6,7 +6,9 @@ import Signup from "./pages/signup/Signup";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import Stores from "./pages/stores/Stores";
+import AddStore from "./pages/stores/AddStore";
 import Navbar from "./components/navbar/Navbar";
+import AddProducts from "./pages/products/AddProducts";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -49,6 +51,24 @@ function App() {
             element={
               <PrivateRoute>
                 <Stores />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/add-store"
+            element={
+              <PrivateRoute>
+                <AddStore />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/add-products"
+            element={
+              <PrivateRoute>
+                <AddProducts />
               </PrivateRoute>
             }
           />

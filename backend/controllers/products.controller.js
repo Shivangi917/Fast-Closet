@@ -31,3 +31,49 @@ export const getTrendingProducts = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 };
+
+export const addProduct = async (req, res) => {
+  try {
+    const { name, description, price, stock, category, brand, images, userId } = req.body;
+
+    if (!name || !price || !category || !images?.length) {
+      return res.status(400).json({ message: "Missing required fields or images" });
+    }
+
+    // Get user's store
+    const store = await Store.findOne({ owner: userId, isVerified: true });
+    if (!store) {
+      return res.status(400).json({ message: "User has no verified store" });
+    }
+
+    // Use images directly from frontend (already uploaded to Cloudinary)
+    const product = new Product({
+      name,
+      description,
+      price,
+      stock,
+      category,
+      brand,
+      store: store._id,
+      images,
+    });
+
+    await product.save();
+    res.status(201).json(product);
+
+  } catch (err) {
+    console.error("Error adding product:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+// Get all products
+export const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find().populate("category").populate("store");
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};

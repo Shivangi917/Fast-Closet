@@ -1,36 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { ShoppingCart, Search, Menu, X, User } from "lucide-react";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
+import { getUserDetails } from "../../utils/api/user.api";
+import { getUserStores } from "../../utils/api/store.api";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [canAddProducts, setCanAddProducts] = useState(false);
+  const [hasStore, setHasStore] = useState(false); // NEW
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  useEffect(() => {
+    const checkVendorStatus = async () => {
+      if (!user) return;
+
+      try {
+        const res = await getUserDetails(user.id);
+        const isVendor = res.roles?.includes("vendor");
+        if (!isVendor) return;
+
+        const stores = await getUserStores(user.id);
+        const verifiedStore = stores.find(store => store.isVerified);
+
+        setCanAddProducts(Boolean(verifiedStore));
+        setHasStore(stores.length > 0); // hide add store if already exists
+      } catch (error) {
+        console.error("Error fetching vendor/store info:", error);
+      }
+    };
+
+    checkVendorStatus();
+  }, [user]);
+
   return (
     <nav className="bg-gray-900 text-white sticky top-0 z-50 shadow-md">
       <div className="mx-8 px-4 sm:px-8 py-3 flex justify-between items-center">
-        {/* Desktop Nav */}
+        
         <div className="hidden md:flex items-center gap-10">
           <Link to="/" className="hover:text-indigo-400 transition">Home</Link>
           <Link to="/stores" className="hover:text-indigo-400 transition">Stores</Link>
           <Link to="/blog" className="hover:text-indigo-400 transition">Blogs</Link>
+
+          {canAddProducts && (
+            <Link to="/add-products" className="hover:text-indigo-400 transition">
+              Add Products
+            </Link>
+          )}
+
+          {!hasStore && ( // only show if user doesn't have a store
+            <Link to="/add-store" className="hover:text-indigo-400 transition">
+              Add Store
+            </Link>
+          )}
         </div>
 
-        {/* Logo */}
-        <Link to="/" className="text-2xl font-extrabold tracking-wide text-indigo-400 hover:text-indigo-300 transition">
+        <Link
+          to="/"
+          className="text-2xl font-extrabold tracking-wide text-indigo-400 hover:text-indigo-300 transition"
+        >
           Fast Closet
         </Link>
 
-        {/* Right Section */}
         <div className="flex items-center gap-6">
-          {/* Cart */}
           <Link to="/cart" className="relative hover:text-indigo-400 transition">
             <ShoppingCart size={24} />
             {user?.cart?.length > 0 && (
@@ -40,7 +78,6 @@ const Navbar = () => {
             )}
           </Link>
 
-          {/* Auth */}
           {!user ? (
             <div className="hidden md:flex gap-4">
               <Link to="/login" className="hover:text-indigo-400 transition">Login</Link>
@@ -51,9 +88,7 @@ const Navbar = () => {
               <Link to="/profile">
                 <User size={20} className="cursor-pointer hover:text-indigo-400" />
               </Link>
-              <span
-                className="text-gray-300 font-medium">Hi, {user.name}
-              </span>
+              <span className="text-gray-300 font-medium">Hi, {user.name}</span>
               <button
                 onClick={handleLogout}
                 className="bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
@@ -63,42 +98,11 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Mobile Menu Toggle */}
           <button className="md:hidden" onClick={() => setMobileMenu(!mobileMenu)}>
             {mobileMenu ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </div>
-
-      {/* Mobile Dropdown Menu */}
-      {mobileMenu && (
-        <div className="md:hidden bg-gray-800 px-4 py-4 flex flex-col gap-4 border-t border-gray-700">
-          <Link to="/" className="hover:text-indigo-400">Home</Link>
-          <Link to="/category/men" className="hover:text-indigo-400">Men</Link>
-          <Link to="/category/women" className="hover:text-indigo-400">Women</Link>
-          <Link to="/category/kids" className="hover:text-indigo-400">Kids</Link>
-          <Link to="/category/accessories" className="hover:text-indigo-400">Accessories</Link>
-
-          {!user ? (
-            <>
-              <Link to="/login" className="hover:text-indigo-400">Login</Link>
-              <Link to="/signup" className="hover:text-indigo-400">Signup</Link>
-            </>
-          ) : (
-            <>
-              <Link to="/profile" className="hover:text-indigo-400">Go To Profile</Link>
-              <Link to="/stores"
-              className="hover:text-indigo-400">Stores Near Me</Link>
-              <button
-                onClick={handleLogout}
-                className="bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
-              >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-      )}
     </nav>
   );
 };
