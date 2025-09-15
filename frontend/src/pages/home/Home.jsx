@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
 import Categories from "../../components/categories/Categories";
 import Stores from "../../components/stores/Stores";
 import Products from "../../components/products/Products";
 import Hero from "../../components/hero/Hero";
+import { getNearbyStores } from "../../utils/api/store.api";
+import { getTrendingProducts } from "../../utils/api/product.api";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [stores, setStores] = useState([]);
-  const [search, setSearch] = useState("");
   const [location, setLocation] = useState({ lat: null, lng: null });
 
   // Get user geolocation
@@ -27,32 +26,28 @@ const Home = () => {
   // Fetch nearby stores
   useEffect(() => {
     if (location.lat && location.lng) {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}/stores/nearby`, {
-          params: { lat: location.lat, lng: location.lng },
-        })
-        .then((res) => setStores(res.data))
-        .catch((err) => console.error(err));
+      getNearbyStores(location.lat, location.lng)
+        .then(setStores)
+        .catch(console.error);
     }
   }, [location]);
 
   // Fetch trending products
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/products/trending`)
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.error(err));
-  }, []);
+    if (location.lat && location.lng) {
+      getTrendingProducts(location.lat, location.lng)
+      .then(setProducts)
+      .catch(console.error);
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <Hero search={search}/>
+      <Hero />
 
       <div className="container mx-auto px-6 py-12">
         <Categories />
-
         <Stores stores={stores} />
-
         <Products products={products} />
       </div>
     </div>

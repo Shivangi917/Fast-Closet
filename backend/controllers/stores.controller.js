@@ -8,8 +8,11 @@ export const getNearbyStores = async (req, res) => {
     const stores = await Store.find({
       location: {
         $near: {
-          $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
-          $maxDistance: 5000 // 5 km radius
+          $geometry: { 
+            type: "Point", 
+            coordinates: [parseFloat(lng), parseFloat(lat)] 
+          },
+          $maxDistance: 5000
         }
       }
     }).populate('products');

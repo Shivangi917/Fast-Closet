@@ -12,22 +12,24 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  
-  role: {
-    type: String,
-    enum: ['customer', 'admin'],   // sellers are handled separately
-    default: 'customer'
+
+  // Role management
+  role: { 
+    type: String, 
+    enum: ["user", "vendor", "admin"], 
+    default: "user" 
   },
 
-  phone: { type: String },
-  addresses: [addressSchema],
+  // Vendor verification
+  isVerifiedVendor: { type: Boolean, default: false },
+  vendorProof: { type: String }, // URL or filename of uploaded document (optional)
 
-  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
-  cart: [{
-    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-    quantity: { type: Number, default: 1 }
-  }]
+  // Cart and address
+  cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  address: addressSchema, // embedded address
 
+  // Optional fields for vendors
+  store: { type: mongoose.Schema.Types.ObjectId, ref: "Store" }
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

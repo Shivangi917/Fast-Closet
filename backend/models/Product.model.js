@@ -9,13 +9,7 @@ const productSchema = new mongoose.Schema({
   brand: String,
   images: [String],
   store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store' },
-  ratings: [
-    {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-      rating: { type: Number, min: 1, max: 5 },
-      review: String,
-    }
-  ],
+  review: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
   averageRating: { type: Number, default: 0 },
 }, { timestamps: true });
 

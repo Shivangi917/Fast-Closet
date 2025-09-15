@@ -1,7 +1,9 @@
-import React from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
-const Hero = ({ search, setSearch }) => {
+const Hero = () => {
+  const [search, setSearch] = useState("");
+
   return (
     <section className="bg-neutral-900 text-gray-100 py-24 px-6 text-center relative overflow-hidden">
       <motion.div
