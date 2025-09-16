@@ -1,37 +1,22 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import API from "../../utils/api/api";
+import { Link } from "react-router-dom";
+import { fetchProducts } from "../../utils/api/product.api";
 
-const Products = ({ trending = false, coords }) => {
+const Products = () => {
   const [products, setProducts] = useState([]);
-  const location = useLocation();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        let res;
-        if (trending && coords?.lat && coords?.lng) {
-          res = await API.get("/products/trending", {
-            params: { lat: coords.lat, lng: coords.lng },
-          });
-        } else {
-          res = await API.get("/products/get");
-        }
-        setProducts(res.data);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-      }
-    };
-
-    fetchProducts();
-  }, [location, trending, coords]);
+    fetchProducts()
+      .then(setProducts)
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="mb-16 px-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-3xl font-bold text-gray-800 border-b border-gray-400 pb-2 inline-block">
-          {trending ? "Trending Products" : "Products"}
+          Explore Products
         </h2>
         <Link
           to="/products"
@@ -43,7 +28,7 @@ const Products = ({ trending = false, coords }) => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.length > 0 ? (
+        {products?.length > 0 ? (
           products.map((product) => (
             <Link
               key={product._id}

@@ -10,7 +10,7 @@ export const addStore = async (req, res) => {
     }
 
     // Hardcoded coordinates for testing
-    const coordinates = [-122.084801, 37.422131]; // Example: Google HQ
+    const coordinates = [22.51623605, 88.4172475]; // Example: Google HQ
 
     const store = new Store({
       name,
@@ -39,6 +39,7 @@ export const getStores = async (req, res) => {
   }
 };
 
+// Get stores info
 export const getStoresByUser = async (req, res) => {
   try {
     const stores = await Store.find({ owner: req.params.userId });
@@ -64,7 +65,11 @@ export const getNearbyStores = async (req, res) => {
           $maxDistance: 50000 // 50 km
         }
       }
-    }).populate('products');
+    }).populate('products')
+      .populate("owner", "name email")
+      .populate("address");
+
+      console.log(stores);
 
     res.json(stores);
   } catch (err) {

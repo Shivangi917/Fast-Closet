@@ -9,6 +9,8 @@ import Stores from "./pages/stores/Stores";
 import AddStore from "./pages/stores/AddStore";
 import Navbar from "./components/navbar/Navbar";
 import AddProducts from "./pages/products/AddProducts";
+import ProductsOfStore from "./pages/products/ProductsOfStore";
+import ProductDetail from "./pages/products/ProductDetail";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -69,6 +71,24 @@ function App() {
             element={
               <PrivateRoute>
                 <AddProducts />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/products/store/:storeId"
+            element={
+              <PrivateRoute>
+                <ProductsOfStore />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/product/:productId"
+            element={
+              <PrivateRoute>
+                <ProductDetail />
               </PrivateRoute>
             }
           />

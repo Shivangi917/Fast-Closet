@@ -24,12 +24,21 @@ export const addProduct = async (formData) => {
   }
 };
 
-export const getProducts = async () => {
+export const fetchProducts = async () => {
   try {
     const res = await API.get("/products/get");
     return res.data;
   } catch (err) {
     console.error("Error fetching products:", err);
-    throw err;
   }
 };
+
+export const fetchProductsOfStore = async () => {
+  try {
+    const res = await API.get(`/products/store/${storeId}/${productId}`);
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Error fetching product:", err);
+  }
+}

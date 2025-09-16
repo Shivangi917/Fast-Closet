@@ -4,10 +4,8 @@ import Stores from "../../components/stores/Stores";
 import Products from "../../components/products/Products";
 import Hero from "../../components/hero/Hero";
 import { getNearbyStores } from "../../utils/api/store.api";
-import { getProducts, getTrendingProducts } from "../../utils/api/product.api";
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
   const [stores, setStores] = useState([]);
   const [location, setLocation] = useState({ lat: null, lng: null });
 
@@ -41,20 +39,15 @@ const Home = () => {
   //   }
   // }, [location]);
 
-  useEffect(() => {
-    getProducts()
-      .then((data) => setProducts(data))
-      .catch(console.error);
-  }, [location]);
-
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <Hero />
 
+      {location ? (<p>${location.lng} and ${location.lat}</p>) : (<>HELLO</>)}
       <div className="container mx-auto px-6 py-12">
         <Categories />
         <Stores stores={stores} />
-        <Products products={products} />
+        <Products />
       </div>
     </div>
   );

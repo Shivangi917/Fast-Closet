@@ -22,17 +22,36 @@ const Stores = ({ stores }) => {
           stores.map((store) => (
             <Link
               key={store._id}
-              to={`/store/${store._id}`}
+              to={`products/store/${store._id}`}
+              state={{ store }}
               className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-200
                          hover:shadow-lg hover:border-teal-500 hover:-translate-y-1 
                          transition-all duration-300 block"
             >
-              <h3 className="font-bold text-xl text-gray-800 mb-2">
+              {/* Store Name + Verified Badge */}
+              <h3 className="font-bold text-xl text-gray-800 mb-2 flex items-center gap-2">
                 {store.name}
+                {store.isVerified && (
+                  <span className="text-teal-600 text-sm font-medium">✔ Verified</span>
+                )}
               </h3>
-              <p className="text-gray-500">{store.distance.toFixed(1)} km away</p>
-              <p className="text-gray-600 mt-2">
-                {store.products.length} products available
+
+              {/* Address */}
+              <p className="text-gray-600">
+                📍 {store.address.street}, {store.address.city}, {store.address.state}
+              </p>
+
+              {/* Owner */}
+              <p className="text-gray-600 mt-1">👤 {store.owner.name}</p>
+
+              {/* Contact */}
+              {store.contactNumber && (
+                <p className="text-gray-600 mt-1">📞 {store.contactNumber}</p>
+              )}
+
+              {/* Products Count */}
+              <p className="text-gray-700 mt-3 font-medium">
+                🛒 {store.products.length} products available
               </p>
             </Link>
           ))
