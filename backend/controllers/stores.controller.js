@@ -69,8 +69,6 @@ export const getNearbyStores = async (req, res) => {
       .populate("owner", "name email")
       .populate("address");
 
-      console.log(stores);
-
     res.json(stores);
   } catch (err) {
     console.error(err);

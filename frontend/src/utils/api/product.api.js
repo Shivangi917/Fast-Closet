@@ -41,4 +41,4 @@ export const fetchProductsOfStore = async () => {
   } catch (err) {
     console.error("Error fetching product:", err);
   }
-}
+};

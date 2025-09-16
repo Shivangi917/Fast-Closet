@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const ProductsOfStore = () => {
   const { storeId } = useParams();
   const location = useLocation();
-  const { store: passedStore } = location.state || {}; // data from Stores.jsx
+  const { store: passedStore } = location.state || {};
   const [store, setStore] = useState(passedStore || null);
   const [loading, setLoading] = useState(!passedStore);
 
