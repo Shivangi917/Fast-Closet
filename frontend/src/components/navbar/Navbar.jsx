@@ -10,7 +10,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [mobileMenu, setMobileMenu] = useState(false);
   const [canAddProducts, setCanAddProducts] = useState(false);
-  const [hasStore, setHasStore] = useState(false); // NEW
+  const [isVendor, setIsVendor] = useState(false);
+  const [hasStore, setHasStore] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -23,14 +24,16 @@ const Navbar = () => {
 
       try {
         const res = await getUserDetails(user.id);
-        const isVendor = res.roles?.includes("vendor");
-        if (!isVendor) return;
+        const vendor = res.roles?.includes("vendor");
+        setIsVendor(vendor);
+
+        if (!vendor) return;
 
         const stores = await getUserStores(user.id);
-        const verifiedStore = stores.find(store => store.isVerified);
+        const verifiedStore = stores.find((store) => store.isVerified);
 
         setCanAddProducts(Boolean(verifiedStore));
-        setHasStore(stores.length > 0); // hide add store if already exists
+        setHasStore(stores.length > 0);
       } catch (error) {
         console.error("Error fetching vendor/store info:", error);
       }
@@ -43,24 +46,28 @@ const Navbar = () => {
     <nav className="bg-gray-900 text-white sticky top-0 z-50 shadow-md">
       <div className="mx-8 px-4 sm:px-8 py-3 flex justify-between items-center">
         
+        {/* Left Links */}
         <div className="hidden md:flex items-center gap-10">
           <Link to="/" className="hover:text-indigo-400 transition">Home</Link>
           <Link to="/stores" className="hover:text-indigo-400 transition">Stores</Link>
           <Link to="/blog" className="hover:text-indigo-400 transition">Blogs</Link>
 
+          {/* Add Products if vendor has a verified store */}
           {canAddProducts && (
             <Link to="/add-products" className="hover:text-indigo-400 transition">
               Add Products
             </Link>
           )}
 
-          {!hasStore && ( // only show if user doesn't have a store
+          {/* Add Store if vendor but no store */}
+          {isVendor && !hasStore && (
             <Link to="/add-store" className="hover:text-indigo-400 transition">
               Add Store
             </Link>
           )}
         </div>
 
+        {/* Logo */}
         <Link
           to="/"
           className="text-2xl font-extrabold tracking-wide text-indigo-400 hover:text-indigo-300 transition"
@@ -68,6 +75,7 @@ const Navbar = () => {
           Fast Closet
         </Link>
 
+        {/* Right Side */}
         <div className="flex items-center gap-6">
           <Link to="/cart" className="relative hover:text-indigo-400 transition">
             <ShoppingCart size={24} />

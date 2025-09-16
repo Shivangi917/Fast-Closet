@@ -1,20 +1,21 @@
 import { Link } from "react-router-dom";
 
-const Stores = ({ stores }) => {
+const StoresGrid = ({ stores, hideHeader=false }) => {
   return (
     <div className="mb-16 px-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 border-b border-gray-500 pb-2 inline-block">
-          Stores Near You
-        </h2>
-        <Link
-          to="/stores"
-          className="text-gray-600 hover:text-gray-800 font-semibold transition-colors"
-        >
-          View All →
-        </Link>
-      </div>
+      {!hideHeader && (
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 border-b border-gray-500 pb-2 inline-block">
+            Stores Near You
+          </h2>
+          <Link
+            to="/stores"
+            className="text-gray-600 hover:text-gray-800 font-semibold transition-colors"
+          >
+            View All →
+          </Link>
+        </div>
+      )}
 
       {/* Stores Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -22,7 +23,7 @@ const Stores = ({ stores }) => {
           stores.map((store) => (
             <Link
               key={store._id}
-              to={`products/store/${store._id}`}
+              to={`/products/store/${store._id}`}
               state={{ store }}
               className="bg-gray-50 p-6 rounded-xl shadow-md border border-gray-200
                          hover:shadow-lg hover:border-teal-500 hover:-translate-y-1 
@@ -63,4 +64,4 @@ const Stores = ({ stores }) => {
   );
 };
 
-export default Stores;
+export default StoresGrid;

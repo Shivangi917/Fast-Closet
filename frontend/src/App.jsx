@@ -12,6 +12,7 @@ import AddProducts from "./pages/products/AddProducts";
 import ProductsOfStore from "./pages/products/ProductsOfStore";
 import ProductDetail from "./pages/products/ProductDetail";
 import Category from "./pages/category/Category";
+import Products from "./pages/products/Products";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -45,15 +46,6 @@ function App() {
             element={
               <PrivateRoute>
                 <Profile />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="/stores"
-            element={
-              <PrivateRoute>
-                <Stores />
               </PrivateRoute>
             }
           />
@@ -99,6 +91,24 @@ function App() {
             element={
               <PrivateRoute>
                 <Category />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/products"
+            element={
+              <PrivateRoute>
+                <Products />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/stores"
+            element={
+              <PrivateRoute>
+                <Stores />
               </PrivateRoute>
             }
           />

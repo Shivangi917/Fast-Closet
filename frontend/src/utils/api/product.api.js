@@ -15,7 +15,6 @@ export const addProduct = async (formData) => {
 export const fetchProducts = async (lat, lng) => {
   try {
     const res = await API.get(`/products/all-products?lat=${lat}&lng=${lng}`);
-    console.log(res);
     return res.data;
   } catch (err) {
     console.error("Error fetching products:", err);

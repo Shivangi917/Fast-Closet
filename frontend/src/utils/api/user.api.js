@@ -1,7 +1,7 @@
 import API from "./api";
 
 export const getUserDetails = async (userId) => {
-    try {
+  try {
     const res = await API.get(`/user/info/${userId}`);
     return res.data;
   } catch (err) {

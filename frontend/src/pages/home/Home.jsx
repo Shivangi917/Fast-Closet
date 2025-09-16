@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
+import { LocationContext } from "../../context/LocationContext";
 import Categories from "../../components/categories/Categories";
-import Stores from "../../components/stores/Stores";
-import Products from "../../components/products/Products";
+import StoresGrid from "../../components/stores/StoresGrid";
+import ProductsGrid from "../../components/products/ProductsGrid";
 import Hero from "../../components/hero/Hero";
 import { getNearbyStores } from "../../utils/api/store.api";
 
 const Home = () => {
+  const { location, setLocation } = useContext(LocationContext);
   const [stores, setStores] = useState([]);
-  const [location, setLocation] = useState({ lat: null, lng: null });
 
   // Get user geolocation
   useEffect(() => {
@@ -33,11 +34,10 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <Hero />
-
       <div className="container mx-auto px-6 py-12">
-        <Categories userLocation={location}/>
-        <Stores stores={stores} />
-        <Products userLocation={location}/>
+        <Categories userLocation={location} />
+        <StoresGrid stores={stores} />
+        <ProductsGrid userLocation={location} />
       </div>
     </div>
   );

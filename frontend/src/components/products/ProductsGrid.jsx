@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchProducts } from "../../utils/api/product.api";
 
-const Products = ({ userLocation }) => {
+const ProductsGrid = ({ userLocation }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -62,4 +62,4 @@ const Products = ({ userLocation }) => {
   );
 };
 
-export default Products;
+export default ProductsGrid;

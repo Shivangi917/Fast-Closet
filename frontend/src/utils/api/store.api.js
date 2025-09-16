@@ -1,5 +1,4 @@
 import API from "./api";
-import axios from 'axios';
 
 export const getNearbyStores = async (lat, lng) => {
   try {
