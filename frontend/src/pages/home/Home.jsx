@@ -33,11 +33,11 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <Hero />
-      
+
       <div className="container mx-auto px-6 py-12">
-        <Categories />
+        <Categories userLocation={location}/>
         <Stores stores={stores} />
-        <Products />
+        <Products userLocation={location}/>
       </div>
     </div>
   );

@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchProducts } from "../../utils/api/product.api";
 
-const Products = () => {
+const Products = ({ userLocation }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetchProducts()
-      .then(setProducts)
-      .catch(console.error);
-  }, []);
+    if (userLocation.lat && userLocation.lng) {
+      fetchProducts(userLocation.lat, userLocation.lng)
+        .then(setProducts)
+        .catch(console.error);
+    }
+  }, [userLocation]);
 
   return (
     <div className="mb-16 px-6">

@@ -11,6 +11,7 @@ import Navbar from "./components/navbar/Navbar";
 import AddProducts from "./pages/products/AddProducts";
 import ProductsOfStore from "./pages/products/ProductsOfStore";
 import ProductDetail from "./pages/products/ProductDetail";
+import Category from "./pages/category/Category";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -89,6 +90,15 @@ function App() {
             element={
               <PrivateRoute>
                 <ProductDetail />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/category/:category"
+            element={
+              <PrivateRoute>
+                <Category />
               </PrivateRoute>
             }
           />

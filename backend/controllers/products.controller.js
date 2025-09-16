@@ -1,54 +1,7 @@
 import Product from "../models/Product.model.js";
 import Store from "../models/Store.model.js";
-import Category from "../models/Category.model.js";
+import Review from "../models/Review.model.js";
 
-// Get all products (safe populate)
-export const getProducts = async (req, res) => {
-  try {
-    const products = await Product.find()
-      .populate({ path: "category", select: "name", strictPopulate: false })
-      .populate({ path: "store", select: "name location", strictPopulate: false });
-
-    res.json(products);
-  } catch (err) {
-    console.error("Error in getProducts:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-// Get trending products by location
-export const getTrendingProducts = async (req, res) => {
-  const { lat, lng } = req.query;
-
-  if (!lat || !lng) {
-    return res.status(400).json({ msg: "Missing coordinates" });
-  }
-
-  try {
-    const nearbyStores = await Store.find({
-      location: {
-        $near: {
-          $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
-          $maxDistance: 5000
-        }
-      }
-    }).select('_id');
-
-    const storeIds = nearbyStores.map(store => store._id);
-
-    const products = await Product.find({ store: { $in: storeIds } })
-      .populate({ path: "category", select: "name", strictPopulate: false })
-      .populate({ path: "store", select: "name location", strictPopulate: false })
-      .limit(50);
-
-    res.json(products);
-  } catch (err) {
-    console.error("Error in getTrendingProducts:", err);
-    res.status(500).json({ msg: "Server Error", error: err.message });
-  }
-};
-
-// Add a product (also updates store's product list)
 export const addProduct = async (req, res) => {
   try {
     const { name, description, price, stock, category, brand, images, userId } = req.body;
@@ -73,12 +26,111 @@ export const addProduct = async (req, res) => {
 
     await product.save();
 
-    // Add product to store
     await Store.findByIdAndUpdate(store._id, { $push: { products: product._id } });
 
     res.status(201).json(product);
   } catch (err) {
     console.error("Error adding product:", err);
     res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+export const getNearbyProductsByCategory = async (req, res) => {
+  try {
+    const { lng, lat, maxDistance = 10000, category } = req.query;
+
+    if (!lng || !lat || !category) {
+      return res.status(400).json({ message: "lng, lat, and category are required" });
+    }
+
+    const nearbyStores = await Store.find({
+      location: {
+        $near: {
+          $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+          $maxDistance: parseInt(maxDistance)
+        }
+      }
+    }).select("_id");
+
+    if (!nearbyStores.length) {
+      return res.json({ products: [] });
+    }
+
+    const storeIds = nearbyStores.map(store => store._id);
+    const products = await Product.find({
+      store: { $in: storeIds },
+      category
+    }).populate("store", "name address");
+
+    res.json({ products });
+  } catch (err) {
+    console.error("Error fetching nearby products:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id)
+      .populate("store", "name address location")
+      .populate("review");
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json(product);
+  } catch (err) {
+    console.error("Error in getProductById:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// ✅ Get products by store
+export const getProductsByStore = async (req, res) => {
+  try {
+    const { storeId } = req.params;
+
+    const products = await Product.find({ store: storeId })
+      .populate("store", "name address");
+
+    res.json(products);
+  } catch (err) {
+    console.error("Error in getProductsByStore:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+export const getAllProducts = async (req, res) => {
+  try {
+    const { lat, lng, maxDistance = 10000 } = req.query;
+
+    if (!lng || !lat) {
+      return res.status(400).json({ message: "lng and lat are required" });
+    }
+
+    const nearbyStores = await Store.find({
+      location: {
+        $near: {
+          $geometry: { type: "Point", coordinates: [parseFloat(lng), parseFloat(lat)] },
+          $maxDistance: parseInt(maxDistance),
+        },
+      },
+    }).select("_id");
+
+    if (!nearbyStores.length) {
+      return res.json([]);
+    }
+
+    const storeIds = nearbyStores.map((store) => store._id);
+    const products = await Product.find({ store: { $in: storeIds } })
+      .populate("store", "name address");
+
+    res.json(products);
+  } catch (err) {
+    console.error("Error fetching nearby products:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };

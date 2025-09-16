@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Categories = () => {
+const Categories = ({ userLocation }) => {
   const categories = ["Men", "Women", "Kids", "Accessories"];
 
   return (
@@ -13,7 +13,8 @@ const Categories = () => {
         {categories.map((cat) => (
           <Link
             key={cat}
-            to={`/category/${cat.toLowerCase()}`}
+            to={`/category/${cat}`}
+            state={{ userLocation }}
             className="block p-6 text-lg font-semibold text-center
                        bg-gray-100 text-gray-800 rounded-xl shadow-md 
                        hover:shadow-lg hover:scale-105 

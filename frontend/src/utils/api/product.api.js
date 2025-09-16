@@ -1,17 +1,5 @@
 import API from "./api";
 
-export const getTrendingProducts = async (lat, lng) => {
-  try {
-    const res = await API.get(`/products/trending`, {
-        params: {lat, lng},
-    });
-    return res.data;
-  } catch (err) {
-    console.error("Error fetching trending products:", err);
-    throw err;
-  }
-};
-
 export const addProduct = async (formData) => {
   try {
     const res = await API.post("/products/add", formData, {
@@ -24,21 +12,38 @@ export const addProduct = async (formData) => {
   }
 };
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (lat, lng) => {
   try {
-    const res = await API.get("/products/get");
+    const res = await API.get(`/products/all-products?lat=${lat}&lng=${lng}`);
+    console.log(res);
     return res.data;
   } catch (err) {
     console.error("Error fetching products:", err);
+    throw err;
   }
 };
 
 export const fetchProductsOfStore = async () => {
   try {
     const res = await API.get(`/products/store/${storeId}/${productId}`);
-    const data = await res.json();
-    return data;
+    return res.data;
   } catch (err) {
     console.error("Error fetching product:", err);
   }
+};
+
+export const getNearbyProductsByCategory = async (lat, lng, category) => {
+  const res = await API.get(`/products/category?lat=${lat}&lng=${lng}&category=${category}`);
+  return res.data;
+};
+
+export const fetchProductById = async (productId) => {
+  const res = await API.get(`/products/product-id/${productId}`);
+  return res.data;
+};
+
+// ✅ Get products of a store
+export const fetchProductsByStore = async (storeId) => {
+  const res = await API.get(`/products/store/${storeId}`);
+  return res.data;
 };
