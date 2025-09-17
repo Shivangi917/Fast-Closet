@@ -9,3 +9,7 @@ export const getUserDetails = async (userId) => {
     throw err;
   }
 }
+
+export const updateUserProfile = (userId, data) => {
+  return API.put(`/user/update/${userId}`, data);
+};
