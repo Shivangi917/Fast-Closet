@@ -20,11 +20,11 @@ const Home = () => {
         });
       });
     }
-  }, []);
+  }, [setLocation]);
 
   // Fetch nearby stores
   useEffect(() => {
-    if (location.lat && location.lng) {
+    if (location?.lat && location?.lng) {
       getNearbyStores(location.lat, location.lng)
         .then(setStores)
         .catch(console.error);
@@ -35,6 +35,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50 font-sans">
       <Hero />
       <div className="container mx-auto px-6 py-12">
+
         <Categories userLocation={location} />
         <StoresGrid stores={stores} />
         <ProductsGrid userLocation={location} />

@@ -7,6 +7,7 @@ import authRouter from './routes/auth.route.js';
 import storeRouter from './routes/stores.route.js';
 import productRouter from './routes/products.route.js';
 import userRouter from './routes/user.route.js';
+import searchRouter from './routes/search.route.js';
 
 import cookieParser from "cookie-parser";
 
@@ -29,6 +30,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/stores', storeRouter);
 app.use('/api/products', productRouter);
 app.use('/api/user', userRouter);
+app.use('/api/search', searchRouter);
 
 app.get('/', (req, res) => {
   res.send("hello");
