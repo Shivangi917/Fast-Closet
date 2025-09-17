@@ -8,29 +8,26 @@ export const searchQuery = async (req, res) => {
       return res.json({ products: [], stores: [], categories: [] });
     }
 
-    const regex = new RegExp(`^${query}`, "i"); // case-insensitive
+    // Search Products using text index
+    const products = await Product.find(
+      { $text: { $search: query } },
+      { score: { $meta: "textScore" } }
+    )
+      .sort({ score: { $meta: "textScore" } })
+      .limit(5)
+      .select("name category images price score");
 
-    // Search Products
-    const products = await Product.find({
-      $or: [
-        { name: regex },
-        { description: regex },
-        { category: regex }
-      ]
-    }).limit(5).select("name category images price");
+    // Search Stores using text index
+    const stores = await Store.find(
+      { $text: { $search: query } },
+      { score: { $meta: "textScore" } }
+    )
+      .sort({ score: { $meta: "textScore" } })
+      .limit(5)
+      .select("name address isVerified score");
 
-    // Search Stores
-    const stores = await Store.find({
-      $or: [
-        { name: regex },
-        { description: regex },
-        { "address.city": regex },
-        { "address.state": regex }
-      ]
-    }).limit(5).select("name address isVerified");
-
-    // Get distinct categories
-    const categories = await Product.distinct("category", { category: regex });
+    // Get distinct categories (based on matched products)
+    const categories = await Product.distinct("category", { $text: { $search: query } });
 
     res.json({ products, stores, categories });
   } catch (err) {

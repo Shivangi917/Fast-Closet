@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
 import { getNearbyProductsByCategory } from "../../utils/api/product.api";
+import { LocationContext } from "../../context/LocationContext";
 
 const Category = () => {
   const { category } = useParams();
-  const location = useLocation();
-  const userLocation = location.state?.userLocation; // comes from Categories Link
+  const { location } = useContext(LocationContext);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,12 +13,12 @@ const Category = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      if (!category || !userLocation?.lat || !userLocation?.lng) return;
+      if (!category || !location?.lat || !location?.lng) return;
 
       try {
         const data = await getNearbyProductsByCategory(
-          userLocation.lat,
-          userLocation.lng,
+          location.lat,
+          location.lng,
           category
         );
         setProducts(data.products || []);
@@ -29,9 +29,8 @@ const Category = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
-  }, [category, userLocation]);
+  }, [category, location]);
 
   if (loading)
     return (

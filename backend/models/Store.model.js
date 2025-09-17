@@ -30,4 +30,10 @@ const storeSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 storeSchema.index({ location: "2dsphere" });
+
+storeSchema.index(
+  { name: "text", description: "text", "address.city": "text", "address.state": "text" },
+  { weights: { name: 5, "address.city": 3, "address.state": 2, description: 1 } }
+);
+
 export default mongoose.model("Store", storeSchema);
