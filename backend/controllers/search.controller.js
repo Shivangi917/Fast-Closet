@@ -4,34 +4,55 @@ import Store from "../models/Store.model.js";
 export const searchQuery = async (req, res) => {
   try {
     const { query } = req.query;
-    if (!query) {
-      return res.json({ products: [], stores: [], categories: [] });
-    }
+    if (!query) return res.json({ products: [], stores: [], categories: [] });
 
-    // Search Products using text index
+    const phraseQuery = `"${query}"`; 
+
     const products = await Product.find(
-      { $text: { $search: query } },
+      { $text: { $search: phraseQuery } },
       { score: { $meta: "textScore" } }
     )
       .sort({ score: { $meta: "textScore" } })
       .limit(5)
-      .select("name category images price score");
+      .select("name category images price");
 
-    // Search Stores using text index
     const stores = await Store.find(
-      { $text: { $search: query } },
+      { $text: { $search: phraseQuery } },
       { score: { $meta: "textScore" } }
     )
       .sort({ score: { $meta: "textScore" } })
       .limit(5)
-      .select("name address isVerified score");
+      .select("name address isVerified");
 
-    // Get distinct categories (based on matched products)
-    const categories = await Product.distinct("category", { $text: { $search: query } });
+    const categories = await Product.distinct("category", { $text: { $search: phraseQuery } });
 
     res.json({ products, stores, categories });
   } catch (err) {
     console.error("Search error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const autocompleteQuery = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) return res.json([]);
+
+    const regex = new RegExp("^" + query, "i"); 
+
+    const productNames = await Product.find({ name: regex }).limit(5).select("name");
+    const storeNames = await Store.find({ name: regex }).limit(5).select("name");
+    const categories = await Product.distinct("category", { category: regex });
+
+    const suggestions = [
+      ...productNames.map((p) => ({ type: "product", value: p.name })),
+      ...storeNames.map((s) => ({ type: "store", value: s.name })),
+      ...categories.map((c) => ({ type: "category", value: c })),
+    ];
+
+    res.json(suggestions);
+  } catch (err) {
+    console.error("Autocomplete error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
