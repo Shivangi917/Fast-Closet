@@ -41,8 +41,12 @@ export const fetchProductById = async (productId) => {
   return res.data;
 };
 
-// ✅ Get products of a store
 export const fetchProductsByStore = async (storeId) => {
   const res = await API.get(`/products/store/${storeId}`);
+  return res.data;
+};
+
+export const fetchSimilarProducts = async (productId) => {
+  const res = await API.get(`/products/${productId}/similar`);
   return res.data;
 };

@@ -88,7 +88,6 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// ✅ Get products by store
 export const getProductsByStore = async (req, res) => {
   try {
     const { storeId } = req.params;
@@ -131,6 +130,26 @@ export const getAllProducts = async (req, res) => {
     res.json(products);
   } catch (err) {
     console.error("Error fetching nearby products:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const getSimilarProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    const similarProducts = await Product.find({
+      category: product.category,
+      _id: { $ne: product._id } 
+    })
+      .limit(6)
+      .populate("store", "name address");
+
+    res.json(similarProducts);
+  } catch (err) {
+    console.error("Error fetching similar products:", err);
     res.status(500).json({ message: "Server error" });
   }
 };

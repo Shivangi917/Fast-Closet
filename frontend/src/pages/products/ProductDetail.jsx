@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import { fetchProductById } from "../../utils/api/product.api.js";
+import { useParams, useLocation, Link } from "react-router-dom";
+import {
+  fetchProductById,
+  fetchSimilarProducts,
+} from "../../utils/api/product.api.js";
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -10,7 +13,9 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(passedProduct || null);
   const [loading, setLoading] = useState(!passedProduct);
   const [error, setError] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
 
+  // Load product details
   useEffect(() => {
     if (!product) {
       const loadProduct = async () => {
@@ -28,12 +33,24 @@ const ProductDetail = () => {
     }
   }, [productId, product]);
 
+  useEffect(() => {
+    const loadSimilar = async () => {
+      try {
+        const data = await fetchSimilarProducts(productId);
+        setSimilarProducts(data);
+      } catch (err) {
+        console.error("Error fetching similar products:", err);
+      }
+    };
+    loadSimilar();
+  }, [productId]);
+
   if (loading) return <div className="p-6">Loading product details...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
   if (!product) return <div className="p-6 text-red-600">Product not found</div>;
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Images */}
         <div>
@@ -67,9 +84,7 @@ const ProductDetail = () => {
               product.stock > 0 ? "text-green-600" : "text-red-600"
             }`}
           >
-            {product.stock > 0
-              ? `${product.stock} in stock`
-              : "Out of stock"}
+            {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
           </p>
 
           <p className="mt-4 text-gray-700">{product.description}</p>
@@ -105,6 +120,40 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Similar Products Section */}
+      {similarProducts.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Explore Similar Products
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {similarProducts.map((p) => (
+              <Link
+                key={p._id}
+                to={`/product/${p._id}`}
+                state={{ product: p }}
+                className="block bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition"
+              >
+                <img
+                  src={p.images?.[0] || "/placeholder.png"}
+                  alt={p.name}
+                  className="w-full h-40 object-cover"
+                />
+                <div className="p-3">
+                  <h3 className="text-gray-900 font-medium truncate">
+                    {p.name}
+                  </h3>
+                  <p className="text-teal-600 font-semibold">₹{p.price}</p>
+                  {p.store && (
+                    <p className="text-sm text-gray-500">{p.store.name}</p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
