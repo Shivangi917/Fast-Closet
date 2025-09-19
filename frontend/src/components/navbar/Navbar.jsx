@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { ShoppingCart, Menu, X, User } from "lucide-react";
+import { ShoppingCart, Menu, X, User, Rss } from "lucide-react";
 import { getUserDetails } from "../../utils/api/user.api";
 import { getUserStores } from "../../utils/api/store.api";
 
@@ -25,14 +25,15 @@ const Navbar = () => {
       try {
         const res = await getUserDetails(user.id);
         const vendor = res.roles?.includes("vendor");
-        setIsVendor(vendor);
 
         if (!vendor) return;
+
+        setIsVendor(vendor);
 
         const stores = await getUserStores(user.id);
         const verifiedStore = stores.find((store) => store.isVerified);
 
-        setCanAddProducts(Boolean(verifiedStore));
+        if (stores.length > 0) setCanAddProducts(verifiedStore);
         setHasStore(stores.length > 0);
       } catch (error) {
         console.error("Error fetching vendor/store info:", error);
