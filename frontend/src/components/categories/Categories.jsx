@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const Categories = ({ userLocation }) => {
-  const categories = ["Men", "Women", "Kids", "Accessories"];
+  const categories = ["Men", "Women", "Kids", "Accessories", "Footwear"];
 
   return (
     <div className="py-12 px-6">

@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, default: 0 },
   category: { type: String, required: true },
   images: [String],
+  size: [{ type: String }],
   store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store' },
   review: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
   averageRating: { type: Number, default: 0 },

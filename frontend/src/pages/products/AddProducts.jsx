@@ -18,12 +18,12 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Hardcoded categories for testing
   const categories = [
-    { _id: "64f1a1a3b2f5a1a2c3d4e5f6", name: "Men" },
-    { _id: "64f1a1a3b2f5a1a2c3d4e5f7", name: "Women" },
-    { _id: "64f1a1a3b2f5a1a2c3d4e5f8", name: "Kids" },
-    { _id: "64f1a1a3b2f5a1a2c3d4e5f9", name: "Accessories" },
+    { _id: "1", name: "Men" },
+    { _id: "2", name: "Women" },
+    { _id: "3", name: "Kids" },
+    { _id: "4", name: "Footwear" },
+    { _id: "5", name: "Accessories" },
   ];
 
   const handleImageUpload = async (e) => {

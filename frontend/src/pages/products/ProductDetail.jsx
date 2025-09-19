@@ -4,8 +4,11 @@ import {
   fetchProductById,
   fetchSimilarProducts,
 } from "../../utils/api/product.api.js";
+import { addProductToCart } from "../../utils/api/cart.api.js";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const ProductDetail = () => {
+  const { user } = useAuth();
   const { productId } = useParams();
   const location = useLocation();
   const { product: passedProduct } = location.state || {};
@@ -15,23 +18,23 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
 
-  // Load product details
   useEffect(() => {
-    if (!product) {
-      const loadProduct = async () => {
-        try {
-          const data = await fetchProductById(productId);
-          setProduct(data);
-        } catch (err) {
-          console.error("Error fetching product:", err);
-          setError("Failed to load product");
-        } finally {
-          setLoading(false);
-        }
-      };
-      loadProduct();
-    }
-  }, [productId, product]);
+    const loadProduct = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchProductById(productId);
+        setProduct(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        setError("Failed to load product");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [productId]);
 
   useEffect(() => {
     const loadSimilar = async () => {
@@ -44,6 +47,16 @@ const ProductDetail = () => {
     };
     loadSimilar();
   }, [productId]);
+
+  const addToCart = async (product) => {
+    try {
+      const cart = await addProductToCart(user.id, product._id, 1);
+      console.log("Cart updated: ", cart);
+      alert("Product added to cart!");
+    } catch (error) {
+      console.log("Error adding to cart: ", error);
+    }
+  };
 
   if (loading) return <div className="p-6">Loading product details...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
@@ -108,6 +121,7 @@ const ProductDetail = () => {
             <button
               className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700"
               disabled={product.stock === 0}
+              onClick={() => addToCart(product)}
             >
               Add to Cart
             </button>

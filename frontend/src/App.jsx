@@ -13,6 +13,7 @@ import ProductsOfStore from "./pages/products/ProductsOfStore";
 import ProductDetail from "./pages/products/ProductDetail";
 import Category from "./pages/category/Category";
 import Products from "./pages/products/Products";
+import CartPage from "./pages/cart/CartPage";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -109,6 +110,15 @@ function App() {
             element={
               <PrivateRoute>
                 <Stores />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/cart"
+            element={
+              <PrivateRoute>
+                <CartPage />
               </PrivateRoute>
             }
           />
