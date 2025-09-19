@@ -44,8 +44,6 @@ const AddProduct = () => {
         uploadedUrls.push(res.data.secure_url);
       }
 
-      console.log(uploadedUrls);
-
       setImages(uploadedUrls);
     } catch (err) {
       console.error("Error uploading images:", err);
@@ -75,7 +73,14 @@ const AddProduct = () => {
     try {
       const res = await addProduct(productData);
       setMessage("Product added successfully!");
-      console.log(res.data);
+      setName("");
+      setDescription("");
+      setPrice("");
+      setStock("");
+      setCategory("");
+      setBrand("");
+      setImages([]);
+      setLoading(false);
     } catch (err) {
       console.error(err);
       setMessage("Error adding product.");
@@ -128,7 +133,7 @@ const AddProduct = () => {
         >
           <option value="">Select Category</option>
           {categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>{cat.name}</option>
+            <option key={cat._id} value={cat.name}>{cat.name}</option>
           ))}
         </select>
 
