@@ -101,6 +101,7 @@ const CartPage = () => {
           <div className="text-right text-xl font-semibold mt-6">
             Total: ₹{cart.totalPrice}
           </div>
+          <button className="bg-teal-600 px-4 py-2 rounded hover:scale-105 text-white cursor-pointer hover:bg-teal-700">Buy All</button>
         </div>
       )}
     </div>
