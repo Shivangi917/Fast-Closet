@@ -6,6 +6,11 @@ import {
 } from "../../utils/api/product.api.js";
 import { addProductToCart } from "../../utils/api/cart.api.js";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { loadStripe } from "@stripe/stripe-js";
+import { confirmPayment } from "../../utils/api/payment.api.js";
+import { createOrder } from '../../utils/api/order.api.js';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const ProductDetail = () => {
   const { user } = useAuth();
@@ -55,6 +60,50 @@ const ProductDetail = () => {
       alert("Product added to cart!");
     } catch (error) {
       console.log("Error adding to cart: ", error);
+    }
+  };
+
+  const handleBuyNow = async () => {
+    try {
+      const items = [{
+        store: product.store._id,
+        product: product._id,
+        quantity: 1,
+        price: product.price
+      }];
+
+      const shippingAddress = user.address;
+
+      const { clientSecrets } = await createOrder({
+        userId: user.id,
+        items,
+        shippingAddress
+      });
+
+      if (!clientSecrets || clientSecrets.length === 0) {
+        throw new Error("No client secret returned from server");
+      }
+
+      const stripe = await stripePromise;
+
+      // Since Buy Now = single store, we just take the first one
+      const { clientSecret, paymentId } = clientSecrets[0];
+
+      const { error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: { token: "tok_visa" }
+        },
+      });
+
+      if (error) {
+        alert("Payment failed: " + error.message);
+      } else {
+        await confirmPayment(paymentId);
+        alert("Payment successful!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Checkout failed");
     }
   };
 
@@ -128,6 +177,7 @@ const ProductDetail = () => {
             <button
               className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300"
               disabled={product.stock === 0}
+              onClick={handleBuyNow}
             >
               Buy Now
             </button>

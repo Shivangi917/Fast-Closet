@@ -14,6 +14,8 @@ import ProductDetail from "./pages/products/ProductDetail";
 import Category from "./pages/category/Category";
 import Products from "./pages/products/Products";
 import CartPage from "./pages/cart/CartPage";
+import OrdersPage from "./pages/order/OrdersPage";
+import OrderDetailsPage from "./pages/order/OrderDetailsPage";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -119,6 +121,24 @@ function App() {
             element={
               <PrivateRoute>
                 <CartPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/orders"
+            element={
+              <PrivateRoute>
+                <OrdersPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/order/:id"
+            element={
+              <PrivateRoute>
+                <OrderDetailsPage />
               </PrivateRoute>
             }
           />

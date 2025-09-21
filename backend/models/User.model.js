@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const addressSchema = new mongoose.Schema({
+export const addressSchema = new mongoose.Schema({
   street: String,
   city: String,
   state: String,
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
 
   // Vendor verification
   isVerifiedVendor: { type: Boolean, default: false },
-  vendorProof: { type: String }, // URL or filename of uploaded document (optional)
+  vendorProof: { type: String }, 
 
   // Cart and address
   cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],

@@ -9,6 +9,8 @@ import productRouter from './routes/products.route.js';
 import userRouter from './routes/user.route.js';
 import searchRouter from './routes/search.route.js';
 import cartRouter from './routes/cart.route.js';
+import paymentRouter from './routes/payment.route.js';
+import orderRouter from './routes/order.route.js';
 
 import cookieParser from "cookie-parser";
 
@@ -33,6 +35,8 @@ app.use('/api/products', productRouter);
 app.use('/api/user', userRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/carts', cartRouter);
+app.use('/api/payment', paymentRouter);
+app.use('/api/order', orderRouter);
 
 app.get('/', (req, res) => {
   res.send("hello");

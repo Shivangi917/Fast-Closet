@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { addressSchema } from './User.model.js';
 
 const orderItemSchema = new mongoose.Schema({
   product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
@@ -8,18 +9,12 @@ const orderItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema({
   customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  seller: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true },
+  store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true },
 
   items: [orderItemSchema],
   totalAmount: { type: Number, required: true },
 
-  shippingAddress: {
-    street: String,
-    city: String,
-    state: String,
-    postalCode: String,
-    country: String
-  },
+  shippingAddress:addressSchema,
 
   paymentMethod: { type: String, enum: ['COD', 'Card', 'UPI', 'Wallet'], default: 'COD' },
   paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },

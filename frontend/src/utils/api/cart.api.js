@@ -14,3 +14,8 @@ export const removeProductFromCart = async (userId, productId) => {
   const res = await API.post(`/carts/remove-from-cart`, { userId, productId });
   return res.data;
 };
+
+export const clearCart = async (userId) => {
+  const res = await API.delete(`/carts/clear/${userId}`);
+  return res.data;
+};

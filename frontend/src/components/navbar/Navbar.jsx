@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { ShoppingCart, Menu, X, User, Rss } from "lucide-react";
+import { ShoppingCart, Menu, X, User, ClipboardList } from "lucide-react";
 import { getUserDetails } from "../../utils/api/user.api";
 import { getUserStores } from "../../utils/api/store.api";
 
@@ -86,6 +86,13 @@ const Navbar = () => {
               </span>
             )}
           </Link>
+
+          {/* Orders Icon */}
+          {user && (
+            <Link to="/orders" className="relative hover:text-indigo-400 transition">
+              <ClipboardList size={24} />
+            </Link>
+          )}
 
           {!user ? (
             <div className="hidden md:flex gap-4">

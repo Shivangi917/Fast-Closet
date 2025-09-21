@@ -85,3 +85,22 @@ export const removeFromCart = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const clearCart = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const cart = await Cart.findOneAndUpdate(
+      { customer: userId }, 
+      { $set: { items: [], totalPrice: 0 } },
+      { new: true }
+    );
+
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    res.json({ message: "Cart cleared successfully", cart });
+  } catch (err) {
+    console.error("Error clearing cart:", err);
+    res.status(500).json({ message: "Failed to clear cart" });
+  }
+};
