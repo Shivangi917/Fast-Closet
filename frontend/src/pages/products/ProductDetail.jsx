@@ -103,7 +103,7 @@ const ProductDetail = () => {
       }
     } catch (err) {
       console.error(err);
-      alert("Checkout failed");
+      alert(err?.response?.data?.message || "Checkout failed");
     }
   };
 

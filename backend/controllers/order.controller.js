@@ -1,5 +1,6 @@
 import Order from "../models/Order.model.js";
 import Payment from "../models/Payment.model.js";
+import User from "../models/User.model.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -7,6 +8,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const createOrder = async (req, res) => {
   try {
     const { userId, items, shippingAddress } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user || !user.phone || !user.address) {
+      return res.status(400).json({ message: "Add your details" });
+    }
+    
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "No items to order" });
     }

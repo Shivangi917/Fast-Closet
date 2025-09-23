@@ -111,7 +111,6 @@ const CartPage = () => {
         shippingAddress,
       });
 
-      // createOrder might return { clientSecrets } or { clientSecrets: [...] } or similar — normalize:
       const clientSecrets = resp?.clientSecrets || (Array.isArray(resp) ? resp : null);
       if (!clientSecrets || clientSecrets.length === 0) {
         throw new Error("No payment intents returned from server");
@@ -151,7 +150,7 @@ const CartPage = () => {
       alert("All payments successful!");
     } catch (err) {
       console.error("Checkout error:", err);
-      alert("Checkout failed: " + (err.message || "Unknown error"));
+      alert(err?.response?.data?.message || "Checkout failed");
     } finally {
       setLoadingCheckout(false);
     }
