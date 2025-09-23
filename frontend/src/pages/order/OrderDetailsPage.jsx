@@ -62,18 +62,25 @@ const OrderDetailsPage = () => {
       <div className="border p-4 rounded-lg shadow bg-white">
         <h3 className="text-lg font-semibold mb-2">Items</h3>
         {order.items.map((item, idx) => (
-          <div key={idx} className="flex items-center space-x-4 mb-3">
-            <img
-              src={item.product.images?.[0] || "/placeholder.png"}
-              alt={item.product.name}
-              className="w-16 h-16 object-cover rounded"
-            />
-            <div>
-              <p className="font-medium">{item.product.name}</p>
-              <p>Qty: {item.quantity}</p>
-              <p>Price: ₹{item.price}</p>
+          <div>
+            <div key={idx} className="flex items-center space-x-4 mb-3">
+              <img
+                src={item.product.images?.[0] || "/placeholder.png"}
+                alt={item.product.name}
+                className="w-16 h-16 object-cover rounded"
+              />
+              <div>
+                <p className="font-medium">{item.product.name}</p>
+                <p>Qty: {item.quantity}</p>
+                <p>Price: ₹{item.price}</p>
+              </div>
             </div>
-            <Link to={`/product/${item.product._id}`}>Go To Product</Link>
+            <button className="bg-teal-700 text-white hover:bg-teal-800 hover:scale-105 px-3 py-1 rounded">
+              <Link to={`/product/${item.product._id}`}
+              >
+                Go To Product
+              </Link>
+            </button>
           </div>
         ))}
       </div>
