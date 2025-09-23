@@ -17,7 +17,10 @@ const ProductsGrid = ({ userLocation }) => {
     if (userLocation.lat && userLocation.lng) {
       fetchProducts(userLocation.lat, userLocation.lng)
         .then(setProducts)
-        .catch(console.error);
+        .catch((err) => {
+          console.error(err);
+          toast.error("Failed to load products. Please try again.");
+        });
     }
   }, [userLocation]);
 

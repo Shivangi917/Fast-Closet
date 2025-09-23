@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { addProduct } from "../../utils/api/product.api";
 
@@ -45,8 +46,10 @@ const AddProduct = () => {
       }
 
       setImages(uploadedUrls);
+      toast.success("Image successfully added!");
     } catch (err) {
       console.error("Error uploading images:", err);
+      toast.error("Failed to upload image");
     }
     setLoading(false);
   };
@@ -81,9 +84,11 @@ const AddProduct = () => {
       setBrand("");
       setImages([]);
       setLoading(false);
+      toast.success("Product successfully added!");
     } catch (err) {
       console.error(err);
       setMessage("Error adding product.");
+      toast.error(setMessage);
     }
   };
 

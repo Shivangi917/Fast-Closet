@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   getCartByUser,
   removeProductFromCart,
@@ -20,7 +21,12 @@ const CartPage = () => {
 
   useEffect(() => {
     if (user) {
-      getCartByUser(user.id).then(setCart).catch(console.error);
+      getCartByUser(user.id)
+        .then(setCart)
+        .catch((err) => {
+          console.error(err);
+          toast.error("Failed to load cart");
+        });
     }
   }, [user]);
 
@@ -84,7 +90,7 @@ const CartPage = () => {
 
   const handleCheckout = async () => {
     if (!cart || !cart.items || cart.items.length === 0) {
-      alert("Your cart is empty");
+      toast.error("Your cart is empty");
       return;
     }
 
@@ -131,7 +137,7 @@ const CartPage = () => {
         });
 
         if (error) {
-          alert("Payment failed: " + error.message);
+          toast.error("Payment failed: " + error.message);
           setLoadingCheckout(false);
           return;
         } else {
@@ -147,10 +153,10 @@ const CartPage = () => {
       }
       setCart({ items: [], totalPrice: 0 });
 
-      alert("All payments successful!");
+      toast.success("All payments successful!");
     } catch (err) {
       console.error("Checkout error:", err);
-      alert(err?.response?.data?.message || "Checkout failed");
+      toast.error(err?.response?.data?.message || "Checkout failed");
     } finally {
       setLoadingCheckout(false);
     }

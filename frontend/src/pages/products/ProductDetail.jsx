@@ -9,6 +9,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { loadStripe } from "@stripe/stripe-js";
 import { confirmPayment } from "../../utils/api/payment.api.js";
 import { createOrder } from '../../utils/api/order.api.js';
+import toast from "react-hot-toast";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -33,6 +34,7 @@ const ProductDetail = () => {
       } catch (err) {
         console.error("Error fetching product:", err);
         setError("Failed to load product");
+        toast.error(setError);
       } finally {
         setLoading(false);
       }
@@ -48,6 +50,7 @@ const ProductDetail = () => {
         setSimilarProducts(data);
       } catch (err) {
         console.error("Error fetching similar products:", err);
+        toast.error("Error fetching similar products!");
       }
     };
     loadSimilar();
@@ -57,7 +60,7 @@ const ProductDetail = () => {
     try {
       const cart = await addProductToCart(user.id, product._id, 1);
       console.log("Cart updated: ", cart);
-      alert("Product added to cart!");
+      toast.success("Product added to cart!");
     } catch (error) {
       console.log("Error adding to cart: ", error);
     }
@@ -99,11 +102,11 @@ const ProductDetail = () => {
         alert("Payment failed: " + error.message);
       } else {
         await confirmPayment(paymentId);
-        alert("Payment successful!");
+        toast.success("Payment successful!");
       }
     } catch (err) {
       console.error(err);
-      alert(err?.response?.data?.message || "Checkout failed");
+      toast.error(err?.response?.data?.message || "Checkout failed");
     }
   };
 

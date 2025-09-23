@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../utils/api/auth.api';
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,6 +24,7 @@ const Login = () => {
     try {
       const { user, token } = await loginUser({ email, password });
       login(user, token);
+      toast.success("Login successful!");
       navigate('/');
     } catch (error) {
       alert("Invalid user credentials");

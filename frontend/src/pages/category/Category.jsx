@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getNearbyProductsByCategory } from "../../utils/api/product.api";
 import { LocationContext } from "../../context/LocationContext";
+import toast from "react-hot-toast";
 
 const Category = () => {
   const { category } = useParams();
@@ -25,6 +26,7 @@ const Category = () => {
       } catch (err) {
         console.error(err);
         setError("Failed to load products");
+        toast.error(setError);
       } finally {
         setLoading(false);
       }

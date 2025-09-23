@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./pages/login/Login";
@@ -32,6 +33,30 @@ function App() {
     <AuthProvider>
       <Router>
         <Navbar />
+
+        {/* Toaster */}
+        <Toaster
+          position="top-center"  
+          reverseOrder={false}
+          toastOptions={{
+            className: "bg-gray-800 text-white px-6 py-4 rounded-lg shadow-lg",
+            style: {
+              minWidth: "300px",
+              maxWidth: "500px",
+              fontSize: "16px",
+            },
+            success: {
+              icon: "✅",
+              className: "bg-green-600 text-white",
+            },
+            error: {
+              icon: "❌",
+              className: "bg-red-600 text-white",
+            },
+            duration: 4000,
+          }}
+        />
+
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
